@@ -56,4 +56,14 @@ public class ProductControllerTest {
             .andExpect(jsonPath("$.quantity", is(10)))
             .andExpect(jsonPath("$.version", is(1)));
 	}
+	
+	@Test
+	@DisplayName("GET /product/1 - Not Found")
+	void testGetProductByIdNotFound() throws Exception {
+		doReturn(Optional.empty()).when(service).findById(1);
+		
+		mockMvc.perform(get("/product/{id}", 1))
+			.andExpect(status().isNotFound());
+		
+	}
 }
