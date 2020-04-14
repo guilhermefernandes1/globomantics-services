@@ -13,4 +13,8 @@ public class ProductService {
 		Product product = new Product(0, "name", 1, 1); 
 		return Optional.of(product);
 	}
+	
+	public Product save(Product product) {
+		return null;
+	}
 }

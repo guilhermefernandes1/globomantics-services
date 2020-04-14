@@ -2,7 +2,9 @@ package com.globomantics.globomanticsservices.controllers;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -22,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.globomantics.globomanticsservices.models.Product;
 import com.globomantics.globomanticsservices.services.ProductService;
 
@@ -66,4 +69,35 @@ public class ProductControllerTest {
 			.andExpect(status().isNotFound());
 		
 	}
+	
+	@Test
+	@DisplayName("POST /product - Success")
+	void testCreateProduct() throws Exception {
+		Product postProduct = new Product("Product Name", 10);
+		Product mockProduct = new Product(1, "Product Name", 10, 1);
+		doReturn(mockProduct).when(service).save(any());
+		
+		mockMvc.perform(post("/product")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(postProduct)))
+		
+			.andExpect(status().isCreated())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			
+			.andExpect(header().string(HttpHeaders.ETAG, "\"1\""))
+			.andExpect(header().string(HttpHeaders.LOCATION, "/product/1"))
+			
+			.andExpect(jsonPath("$.id", is(1)))
+			.andExpect(jsonPath("$.name", is("Product Name")))
+			.andExpect(jsonPath("$.quantity", is(10)))
+            .andExpect(jsonPath("$.version", is(1)));
+	}
+	
+	static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
