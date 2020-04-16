@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -91,6 +92,32 @@ public class ProductControllerTest {
 			.andExpect(jsonPath("$.name", is("Product Name")))
 			.andExpect(jsonPath("$.quantity", is(10)))
             .andExpect(jsonPath("$.version", is(1)));
+	}
+	
+	@Test
+	@DisplayName("PUT /product/1 - Success")
+	void testUpdateProductSuccess() throws Exception {
+		Product putProduct = new Product("Product Name", 10);
+		Product mockProduct = new Product(1, "Product Name", 10, 1);
+		
+		doReturn(Optional.of(mockProduct)).when(service).findById(1);
+		doReturn(true).when(service).update(any());
+		
+		mockMvc.perform(put("/product/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.IF_MATCH, 1)
+				.content(asJsonString(putProduct)))
+		
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			
+			.andExpect(header().string(HttpHeaders.ETAG, "\"2\""))
+			.andExpect(header().string(HttpHeaders.LOCATION, "/product/1"))
+			
+			.andExpect(jsonPath("$.id", is(1)))
+			.andExpect(jsonPath("$.name", is("Product Name")))
+			.andExpect(jsonPath("$.quantity", is(10)))
+            .andExpect(jsonPath("$.version", is(2)));
 	}
 	
 	static String asJsonString(final Object obj) {

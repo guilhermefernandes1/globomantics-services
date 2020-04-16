@@ -17,4 +17,8 @@ public class ProductService {
 	public Product save(Product product) {
 		return null;
 	}
+	
+	public boolean update(Product product) {
+		return true;
+	}
 }
