@@ -23,22 +23,35 @@ public class ProductServiceTest {
 
 	@Autowired
 	private ProductService service;
-	
+
 	@MockBean
 	private ProductRepository repository;
-	
+
 	@Test
-    @DisplayName("Test findById Success")
-    void testFindByIdSuccess() {
-        // Setup our mock
-        Product mockProduct = new Product(1, "Product Name", 10, 1);
-        doReturn(Optional.of(mockProduct)).when(repository).findById(1);
+	@DisplayName("Test findById Success")
+	void testFindByIdSuccess() {
+		// Setup our mock
+		Product mockProduct = new Product(1, "Product Name", 10, 1);
+		doReturn(Optional.of(mockProduct)).when(repository).findById(1);
 
-        // Execute the service call
-        Optional<Product> returnedProduct = service.findById(1);
+		// Execute the service call
+		Optional<Product> returnedProduct = service.findById(1);
 
-        // Assert the response
-        Assertions.assertTrue(returnedProduct.isPresent(), "Product was not found");
-        Assertions.assertSame(returnedProduct.get(), mockProduct, "Products should be the same");
-    }
+		// Assert the response
+		Assertions.assertTrue(returnedProduct.isPresent(), "Product was not found");
+		Assertions.assertSame(returnedProduct.get(), mockProduct, "Products should be the same");
+	}
+
+	@Test
+	@DisplayName("Test findById Not Found")
+	void testFindByIdNotFound() {
+		// Setup our mock
+		doReturn(Optional.empty()).when(repository).findById(1);
+
+		// Execute the service call
+		Optional<Product> returnedProduct = service.findById(1);
+
+		// Assert the response
+		Assertions.assertFalse(returnedProduct.isPresent(), "Product was found, when it shouldn't be");
+	}
 }
