@@ -1,6 +1,7 @@
 package com.globomantics.globomanticsservices.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,13 @@ import com.globomantics.globomanticsservices.services.ProductService;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @RestController
 public class ProductController {
+	
+	private static final Logger logger = LogManager.getLogger(ProductController.class);
 	
 	private final ProductService productService;
 	
@@ -93,4 +98,21 @@ public class ProductController {
 		}).orElse(ResponseEntity.notFound().build());
 		
 	}
+	
+	@DeleteMapping("/product/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
+
+        logger.info("Deleting product with ID {}", id);
+
+        // Get the existing product
+        Optional<Product> existingProduct = productService.findById(id);
+
+        return existingProduct.map(p -> {
+            if (productService.delete(p.getId())) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }
