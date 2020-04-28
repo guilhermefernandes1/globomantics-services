@@ -32,7 +32,10 @@ public class ProductService {
     }
 	
 	public Product save(Product product) {
-		return null;
+		product.setVersion(1);
+
+        logger.info("Save product to the database: {}", product);
+        return productRepository.save(product);
 	}
 	
 	public boolean update(Product product) {

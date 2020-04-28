@@ -70,4 +70,17 @@ public class ProductServiceTest {
 
         Assertions.assertEquals(2, products.size(), "findAll should return 2 products");
     }
+	
+	@Test
+    @DisplayName("Test save product")
+    void testSave() {
+        Product mockProduct = new Product(1, "Product Name", 10, 1);
+        doReturn(mockProduct).when(repository).save(any());
+
+        Product returnedProduct = service.save(mockProduct);
+
+        Assertions.assertNotNull(returnedProduct, "The saved product should not be null");
+        Assertions.assertEquals(1, returnedProduct.getVersion(),
+                "The version for a new product should be 1");
+    }
 }

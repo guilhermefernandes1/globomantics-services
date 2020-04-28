@@ -18,4 +18,9 @@ public class ProductRepository {
 		
 		return products;
 	}
+
+	public Product save(Product product) {
+		// Product product = new Product(0, "name", 1, 1); 
+		return product; 
+	}
 }
