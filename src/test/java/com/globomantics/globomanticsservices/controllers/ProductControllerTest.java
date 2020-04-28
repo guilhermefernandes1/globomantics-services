@@ -138,6 +138,22 @@ public class ProductControllerTest {
                 .andExpect(status().isConflict());
     }
 	
+	@Test
+    @DisplayName("PUT /product/1 - Not Found")
+    void testProductPutNotFound() throws Exception {
+        // Setup mocked service
+        Product putProduct = new Product("Product Name", 10);
+        doReturn(Optional.empty()).when(service).findById(1);
+
+        mockMvc.perform(put("/product/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.IF_MATCH, 1)
+                .content(asJsonString(putProduct)))
+
+                // Validate the response code and content type
+                .andExpect(status().isNotFound());
+    }
+	
 	static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
