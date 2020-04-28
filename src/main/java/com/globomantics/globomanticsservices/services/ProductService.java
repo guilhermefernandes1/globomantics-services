@@ -1,5 +1,6 @@
 package com.globomantics.globomanticsservices.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +25,11 @@ public class ProductService {
 		logger.info("Find product with id: {}", id);
         return productRepository.findById(id);
 	}
+	
+    public List<Product> findAll() {
+        logger.info("Find all products");
+        return productRepository.findAll();
+    }
 	
 	public Product save(Product product) {
 		return null;

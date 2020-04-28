@@ -3,6 +3,8 @@ package com.globomantics.globomanticsservices.services;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -54,4 +56,18 @@ public class ProductServiceTest {
 		// Assert the response
 		Assertions.assertFalse(returnedProduct.isPresent(), "Product was found, when it shouldn't be");
 	}
+	
+	@Test
+    @DisplayName("Test findAll")
+    void testFindAll() {
+        // Setup our mock
+        Product mockProduct = new Product(1, "Product Name", 10, 1);
+        Product mockProduct2 = new Product(2, "Product Name 2", 15, 3);
+        doReturn(Arrays.asList(mockProduct, mockProduct2)).when(repository).findAll();
+
+        // Execute the service call
+        List<Product> products = service.findAll();
+
+        Assertions.assertEquals(2, products.size(), "findAll should return 2 products");
+    }
 }
