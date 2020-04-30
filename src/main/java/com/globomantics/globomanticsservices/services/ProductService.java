@@ -39,6 +39,7 @@ public class ProductService {
 	}
 	
 	public boolean update(Product product) {
+		// TODO: update product version here, not in the controller. 
 		boolean updated = false;
 		
 		logger.info("Update product to the database: {}", product);
