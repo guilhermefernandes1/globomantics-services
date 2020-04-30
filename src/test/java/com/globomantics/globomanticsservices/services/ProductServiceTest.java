@@ -83,4 +83,15 @@ public class ProductServiceTest {
         Assertions.assertEquals(1, returnedProduct.getVersion(),
                 "The version for a new product should be 1");
     }
+	
+	@Test
+    @DisplayName("Test update product")
+    void testUpdate() {
+		Product product = new Product(1, "Product Name", 10, 1);
+        doReturn(product).when(repository).save(any());
+
+        Boolean updated = service.update(product);
+
+        Assertions.assertTrue(updated);
+    }
 }

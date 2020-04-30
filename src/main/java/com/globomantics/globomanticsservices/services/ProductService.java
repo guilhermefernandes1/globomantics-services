@@ -39,7 +39,15 @@ public class ProductService {
 	}
 	
 	public boolean update(Product product) {
-		return true;
+		boolean updated = false;
+		
+		logger.info("Update product to the database: {}", product);
+		
+		Product savedProduct = this.save(product);
+		
+		if(savedProduct != null) updated = true;
+		
+		return updated;
 	}
 	
 	public boolean delete(Integer id) {

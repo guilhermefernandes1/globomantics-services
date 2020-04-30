@@ -23,4 +23,8 @@ public class ProductRepository {
 		// Product product = new Product(0, "name", 1, 1); 
 		return product; 
 	}
+
+	/*public Product update(Product product) {
+		return product;		
+	}*/
 }
