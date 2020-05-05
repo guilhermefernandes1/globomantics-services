@@ -67,4 +67,25 @@ public class ProductRepositoryTest {
         // Validate that we found it
         Assertions.assertFalse(product.isPresent(), "Product with ID 3 should be not be found");
     }
+	
+    @Test
+    @DataSet(value = "products.yml")
+    void testSave() {
+        // Create a new product and save it to the database
+        Product product = new Product("Product 5", 5);
+        product.setVersion(1);
+        Product savedProduct = repository.save(product);
+
+        // Validate the saved product
+        Assertions.assertEquals("Product 5", savedProduct.getName());
+        Assertions.assertEquals(5, savedProduct.getQuantity());
+
+        // Validate that we can get it back out of the database
+        Optional<Product> loadedProduct = repository.findById(savedProduct.getId());
+        Assertions.assertTrue(loadedProduct.isPresent(), "Could not reload product from the database");
+        Assertions.assertEquals("Product 5", loadedProduct.get().getName(), "Product name does not match");
+        Assertions.assertEquals(5, loadedProduct.get().getQuantity(), "Product quantity does not match");
+        Assertions.assertEquals(1, loadedProduct.get().getVersion(), "Product version is incorrect");
+    }
+    
 }
