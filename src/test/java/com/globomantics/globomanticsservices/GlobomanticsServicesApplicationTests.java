@@ -3,10 +3,10 @@ package com.globomantics.globomanticsservices;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+// @SpringBootTest
 class GlobomanticsServicesApplicationTests {
 
-	@Test
+//	@Test
 	void contextLoads() {
 	}
 
