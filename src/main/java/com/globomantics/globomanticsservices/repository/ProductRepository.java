@@ -89,4 +89,8 @@ public class ProductRepository {
                 product.getVersion(),
                 product.getId()) == 1;		
 	}
+	
+    public boolean delete(Integer id) {
+        return jdbcTemplate.update("DELETE FROM products WHERE id = ?", id) == 1;
+    }
 }

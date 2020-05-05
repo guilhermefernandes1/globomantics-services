@@ -117,4 +117,22 @@ public class ProductRepositoryTest {
         Assertions.assertFalse(result, "The product should not have been updated");
     }
     
+    @Test
+    @DataSet("products.yml")
+    void testDeleteSuccess() {
+        boolean result = repository.delete(1);
+        Assertions.assertTrue(result, "Delete should return true on success");
+
+        // Validate that the product has been deleted
+        Optional<Product> product = repository.findById(1);
+        Assertions.assertFalse(product.isPresent(), "Product with ID 1 should have been deleted");
+    }
+    
+    @Test
+    @DataSet("products.yml")
+    void testDeleteFailure() {
+        boolean result = repository.delete(3);
+        Assertions.assertFalse(result, "Delete should return false because the deletion failed");
+    }
+    
 }
