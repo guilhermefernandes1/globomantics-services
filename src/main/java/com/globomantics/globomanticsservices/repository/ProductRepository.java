@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -27,8 +28,21 @@ public class ProductRepository {
     }
 
 	public Optional<Product> findById(int id) {
-		Product product = new Product(0, "name", 1, 1); 
-		return Optional.of(product); 
+		try {
+            Product product = jdbcTemplate.queryForObject("SELECT * FROM products WHERE id = ?",
+                    new Object[]{id},
+                    (rs, rowNum) -> {
+                        Product p = new Product();
+                        p.setId(rs.getInt("id"));
+                        p.setName(rs.getString("name"));
+                        p.setQuantity(rs.getInt("quantity"));
+                        p.setVersion(rs.getInt("version"));
+                        return p;
+                    });
+            return Optional.of(product);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        } 
 	}
 	
 	public List<Product> findAll() {

@@ -1,6 +1,7 @@
 package com.globomantics.globomanticsservices.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -39,5 +40,31 @@ public class ProductRepositoryTest {
         List<Product> products = repository.findAll();
         Assertions.assertEquals(2, products.size(), "We should have 2 products in our database");
     }
+	
+	@Test
+    @DataSet("products.yml")
+    void testFindByIdSuccess() {
+        // Find the product with ID 2
+        Optional<Product> product = repository.findById(2);
 
+        // Validate that we found it
+        Assertions.assertTrue(product.isPresent(), "Product with ID 2 should be found");
+
+        // Validate the product values
+        Product p = product.get();
+        Assertions.assertEquals(2, p.getId(), "Product ID should be 2");
+        Assertions.assertEquals("Product 2", p.getName(), "Product name should be \"Product 2\"");
+        Assertions.assertEquals(5, p.getQuantity(), "Product quantity should be 5");
+        Assertions.assertEquals(2, p.getVersion(), "Product version should be 2");
+    }
+	
+	@Test
+    @DataSet("products.yml")
+    void testFindByIdNotFound() {
+        // Find the product with ID 2
+        Optional<Product> product = repository.findById(3);
+
+        // Validate that we found it
+        Assertions.assertFalse(product.isPresent(), "Product with ID 3 should be not be found");
+    }
 }
