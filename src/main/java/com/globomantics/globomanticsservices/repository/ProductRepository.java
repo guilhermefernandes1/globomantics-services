@@ -82,7 +82,11 @@ public class ProductRepository {
         return product;
 	}
 
-	/*public Product update(Product product) {
-		return product;		
-	}*/
+	public boolean update(Product product) {
+		return jdbcTemplate.update("UPDATE products SET name = ?, quantity = ?, version = ? WHERE id = ?",
+                product.getName(),
+                product.getQuantity(),
+                product.getVersion(),
+                product.getId()) == 1;		
+	}
 }
